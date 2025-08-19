@@ -1,0 +1,82 @@
+name: CD – Deploy & Test Dev
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  deploy_and_test:
+    runs-on: ubuntu-latest
+    environment: databricks-dev   # configure this environment in GitHub with secrets
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Validate bundle locally (fast fail)
+        run: databricks bundle validate --target dev
+        working-directory: clievaluation8
+        env:
+
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+
+
+      - name: Install Data Contract CLI
+        run: |
+          python3 -m pip install 'datacontract-cli[all]'
+
+      - name: Run Data Contract Test
+        run: |
+          datacontract test clievaluation8/datacontract.yml
+
+      - name: Verify external_location exists (pre-check)
+        run: |
+          set -euo pipefail
+          echo "Checking external location: loc-dev-raw-clievaluation8-test-jonas"
+          databricks external-locations get 'loc-dev-raw-clievaluation8-test-jonas' || (echo "External location loc-dev-raw-clievaluation8-test-jonas not found in dev metastore. Please create it or grant CI identity permission." && exit 1)
+        working-directory: clievaluation8
+        env:
+
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+
+
+      - name: Deploy to Dev (auto-approve)
+        run: databricks bundle deploy --target dev --auto-approve
+        working-directory: clievaluation8
+        env:
+
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+
+
+      - name: Run Dev Smoke Test
+        id: smoke
+        run: |
+          set -o pipefail
+          databricks bundle run --target dev --job smoke_test 2>&1 | tee smoke_run.log
+          if grep -iE "fail|error" smoke_run.log; then
+            echo "Smoke test failure detected" >&2
+            exit 2
+          fi
+        working-directory: clievaluation8
+        env:
+
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+
+
+      - name: Upload smoke logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-logs-dev
+          path: smoke_run.log
+
+      - name: Notify on success (optional)
+        if: success()
+        run: echo "Deploy to dev succeeded"

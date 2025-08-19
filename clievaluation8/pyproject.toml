@@ -1,0 +1,16 @@
+[project]
+name = "clievaluation8"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "cowsay>=6.1",
+    "pyspark>=3.5.5",
+    "pytest>=8.3.5",
+]
+
+[project.scripts]
+main = "clievaluation8.main:main"
+
+ 

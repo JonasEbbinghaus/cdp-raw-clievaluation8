@@ -1,0 +1,25 @@
+resources:
+  jobs:
+    dtl_pipeline_example:
+      name: dtl_pipeline_example
+
+      schedule:
+        quartz_cron_expression: "0 0 0 * * ?"
+        timezone_id: Europe/Amsterdam
+
+      email_notifications:
+        on_failure:
+          - jonas.ebbinghaus@vaillant-group.com
+          - other.emails@vaillant-group.com
+
+      tasks:
+        - task_key: refresh_pipeline
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.clievaluation8_pipeline.id}
+
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 16.4.x-scala2.12
+            node_type_id: Standard_D3_v2
+            num_workers: 1

@@ -1,0 +1,20 @@
+bundle:
+  name: clievaluation8
+
+include:
+  - artifacts/*.yml
+  - resources/jobs/*.yml
+  - resources/pipelines/*.yml
+  - targets/*.yml
+  - variables/*.yml
+
+targets:
+  dev:
+    workspace: https://adb-4280611164646789.9.azuredatabricks.net
+    catalog: cdp_dev_raw_clievaluation8
+    external_location: abfss://loc-dev-raw-clievaluation8-test-jonas@stcdphubcommondev.dfs.core.windows.net/
+
+  prod:
+    workspace: https://adb-1232603156744818.18.azuredatabricks.net
+    catalog: cdp_prod_raw_clievaluation8
+    external_location: abfss://loc-prod-raw-clievaluation8-test-jonas@stcdphubcommonprod.dfs.core.windows.net/

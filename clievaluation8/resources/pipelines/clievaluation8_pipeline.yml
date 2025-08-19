@@ -1,0 +1,8 @@
+resources:
+  pipelines:
+    clievaluation8_pipeline:
+      name: clievaluation8_pipeline
+      target: clievaluation8_${bundle.environment}
+      libraries:
+        - notebook:
+            path: ../../src/dlt_pipeline.ipynb

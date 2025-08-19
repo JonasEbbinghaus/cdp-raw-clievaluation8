@@ -1,0 +1,140 @@
+dataContractSpecification: 1.2.0
+id: cdp_raw_clievaluation8
+info:
+  title: clievaluation8
+  version: 1.0.0
+  description: |
+    The table contains information about products, including their identifiers, names, descriptions, and status indicators such as whether they are active or deleted.
+    It also tracks creation and modification dates along with the users responsible for these actions.
+    This data can be used for inventory management, product analysis, and understanding product lifecycle within the organization.
+  owner: Salesforce Data Steward
+  contact:
+    name: John Doe (Data Product Owner) # Change to your name
+    #url: ""
+servers:
+  development:
+    type: databricks
+    host: adb-1441631584157816.16.azuredatabricks.net
+    catalog: viaa_structured_salesforce_dev
+    schema: public
+terms:
+  usage: >
+    Data can be used for reports, analytics and machine learning use cases.
+    Order may be linked and joined by other tables
+  limitations: >
+    Not suitable for real-time use cases.
+    PII data is masked.
+  billing: free
+  noticePeriod: P3M
+models:
+  product2:
+    description: Contains product details.
+    type: table
+    fields:
+      Id:
+        description: Unique identifier for the product.
+        type: string
+        required: true
+        unique: true
+        primaryKey: true
+      Name:
+        description: Name of the product.
+        type: string
+        required: true
+      ProductCode:
+        description: Code representing the product.
+        type: string
+        required: true
+      Description:
+        description: Detailed description of the product.
+        type: string
+      IsActive:
+        description: Indicates if the product is active.
+        type: string
+        required: true
+      CreatedDate:
+        description: The date and time when the product was created.
+        type: string
+        format: date-time
+        required: true
+      CreatedById:
+        description: Identifier of the user who created the product.
+        type: string
+        required: true
+      LastModifiedDate:
+        description: The date and time when the product was last modified.
+        type: string
+        format: date-time
+        required: true
+      LastModifiedById:
+        description: Identifier of the user who last modified the product.
+        type: string
+        required: true
+      SystemModstamp:
+        description: System timestamp for the last modification.
+        type: string
+        format: date-time
+        required: true
+      Family:
+        description: Product family or category.
+        type: string
+      IsSerialized:
+        description: Indicates if the product is serialized.
+        type: string
+      CurrencyIsoCode:
+        description: ISO code for the currency.
+        type: string
+      ExternalDataSourceId:
+        description: Identifier for the external data source.
+        type: string
+      ExternalId:
+        description: External identifier for the product.
+        type: string
+      DisplayUrl:
+        description: URL for displaying the product.
+        type: string
+      QuantityUnitOfMeasure:
+        description: Unit of measure for the product quantity.
+        type: string
+      IsDeleted:
+        description: Indicates if the product is deleted.
+        type: string
+      IsArchived:
+        description: Indicates if the product is archived.
+        type: string
+      LastViewedDate:
+        description: The date and time when the product was last viewed.
+        type: string
+        format: date-time
+    quality:
+      - type: sql
+        description: Row Count
+        query: |
+          SELECT count(*) as row_count
+          FROM viaa_structured_salesforce_dev.public.product2
+        mustBeGreaterThan: 100
+    examples:
+      - |
+        Id,Name,ProductCode,Description,IsActive,CreatedDate,CreatedById,LastModifiedDate,LastModifiedById,SystemModstamp,Family,IsSerialized,CurrencyIsoCode,ExternalDataSourceId,ExternalId,DisplayUrl,QuantityUnitOfMeasure,IsDeleted,IsArchived,LastViewedDate
+        "P1001","Product A","PA001","Description of Product A","true","2025-07-09T08:30:00Z","U1001","2025-07-09T08:31:00Z","U1002","2025-07-09T08:32:00Z","Family A","false","USD","EDS1001","EID1001","http://example.com/productA","Unit A","false","false","2025-07-09T08:33:00Z"
+        "P1002","Product B","PB002","Description of Product B","true","2025-07-08T15:45:00Z","U1003","2025-07-08T15:46:00Z","U1004","2025-07-08T15:47:00Z","Family B","true","EUR","EDS1002","EID1002","http://example.com/productB","Unit B","false","false","2025-07-08T15:48:00Z"
+        "P1003","Product C","PC003","Description of Product C","false","2025-07-07T12:15:00Z","U1005","2025-07-07T12:16:00Z","U1006","2025-07-07T12:17:00Z","Family C","false","GBP","EDS1003","EID1003","http://example.com/productC","Unit C","true","true","2025-07-07T12:18:00Z"
+        "P1004","Product D","PD004","Description of Product D","true","2025-07-06T19:20:00Z","U1007","2025-07-06T19:21:00Z","U1008","2025-07-06T19:22:00Z","Family D","true","JPY","EDS1004","EID1004","http://example.com/productD","Unit D","false","false","2025-07-06T19:23:00Z"
+        "P1005","Product E","PE005","Description of Product E","false","2025-07-05T10:10:00Z","U1009","2025-07-05T10:11:00Z","U1010","2025-07-05T10:12:00Z","Family E","false","AUD","EDS1005","EID1005","http://example.com/productE","Unit E","true","true","2025-07-05T10:13:00Z"
+        "P1006","Product F","PF006","Description of Product F","true","2025-07-04T14:55:00Z","U1011","2025-07-04T14:56:00Z","U1012","2025-07-04T14:57:00Z","Family F","true","CAD","EDS1006","EID1006","http://example.com/productF","Unit F","false","false","2025-07-04T14:58:00Z"
+        "P1007","Product G","PG007","Description of Product G","false","2025-07-03T21:05:00Z","U1013","2025-07-03T21:06:00Z","U1014","2025-07-03T21:07:00Z","Family G","false","CHF","EDS1007","EID1007","http://example.com/productG","Unit G","true","true","2025-07-03T21:08:00Z"
+        "P1008","Product H","PH008","Description of Product H","true","2025-07-02T17:40:00Z","U1015","2025-07-02T17:41:00Z","U1016","2025-07-02T17:42:00Z","Family H","true","NZD","EDS1008","EID1008","http://example.com/productH","Unit H","false","false","2025-07-02T17:43:00Z"
+        "P1009","Product I","PI009","Description of Product I","false","2025-07-01T09:25:00Z","U1017","2025-07-01T09:26:00Z","U1018","2025-07-01T09:27:00Z","Family I","false","SGD","EDS1009","EID1009","http://example.com/productI","Unit I","true","true","2025-07-01T09:28:00Z"
+        "P1010","Product J","PJ010","Description of Product J","true","2025-06-30T22:50:00Z","U1019","2025-06-30T22:51:00Z","U1020","2025-06-30T22:52:00Z","Family J","true","HKD","EDS1010","EID1010","http://example.com/productJ","Unit J","false","false","2025-06-30T22:53:00Z"
+servicelevels:
+  availability:
+    percentage: 99.9%
+  retention:
+    period: 1 year
+  freshness:
+    threshold: 25 hours
+    timestampField: articles.processing_timestamp
+  frequency:
+    description: Data is updated once a day
+    type: batch
+    cron: 51 0 4 * * ?

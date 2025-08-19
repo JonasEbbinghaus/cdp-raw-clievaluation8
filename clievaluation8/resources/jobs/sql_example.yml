@@ -1,0 +1,20 @@
+resources:
+  jobs:
+    sql_example:
+      name: sql_example
+
+      schedule:
+        quartz_cron_expression: "0 0 0 * * ?"
+        timezone_id: Europe/Amsterdam
+
+      email_notifications:
+        on_failure:
+          - jonas.ebbinghaus@vaillant-group.com
+          - other.emails@vaillant-group.com
+
+      tasks:
+        - task_key: sql_task
+          sql_task:
+            file:
+              path: ../../src/sql/sql_example.sql
+            warehouse_id: ${var.warehouse_id}

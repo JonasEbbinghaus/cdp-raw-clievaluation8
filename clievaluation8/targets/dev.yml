@@ -8,7 +8,7 @@ targets:
     mode: development
     default: true
     workspace:
-      host: https://adb-4280611164646789.9.azuredatabricks.net
+      host: https://adb-***.*.azuredatabricks.net
     variables:
       warehouse_id:
         lookup:

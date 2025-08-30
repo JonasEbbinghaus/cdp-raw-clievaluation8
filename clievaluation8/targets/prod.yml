@@ -7,7 +7,7 @@ targets:
     # to a path that is not specific to the current user.
     mode: production
     workspace:
-      host: https://adb-1232603156744818.18.azuredatabricks.net
+      host: https://adb-***.*.azuredatabricks.net
       root_path: /Users/${workspace.current_user.userName}/.bundle/${bundle.name}
     variables:
       warehouse_id:
